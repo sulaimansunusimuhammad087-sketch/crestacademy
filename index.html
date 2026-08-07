@@ -8,224 +8,344 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-  :root{
-    --void:#060810; --surface:#0d1220; --surface-2:#10162a;
-    --hairline:rgba(255,255,255,.08); --text:#edeff7; --muted:#8992aa;
-    --indigo:#6366f1; --violet:#8b5cf6; --cyan:#22d3ee;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0; background:var(--void); color:var(--text);
-    font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
-  }
-  .font-display{font-family:'Space Grotesk',sans-serif;}
-  .font-mono{font-family:'JetBrains Mono',monospace; letter-spacing:.06em;}
-  a{color:inherit; text-decoration:none;}
-  .wrap{max-width:1100px; margin:0 auto; padding:0 20px;}
-  @media(min-width:640px){ .wrap{padding:0 32px;} }
-
-  .gradient-text{
-    background:linear-gradient(90deg,#818cf8,#a78bfa 45%,#22d3ee);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .glow{ box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 8px 40px -8px rgba(99,102,241,.45); }
-
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    font-size:14px; font-weight:500; padding:14px 24px; border-radius:12px;
-    border:none; cursor:pointer; font-family:'Inter',sans-serif;
-  }
-  .btn-primary{
-    background:linear-gradient(135deg,var(--indigo),var(--violet)); color:#fff;
-    transition:transform .18s ease, filter .18s ease;
-  }
-  .btn-primary:hover{ transform:translateY(-1px); filter:brightness(1.08); }
-  .btn-ghost{
-    background:transparent; color:#e2e5ef; border:1px solid var(--hairline);
-    transition:border-color .18s ease, background .18s ease;
-  }
-  .btn-ghost:hover{ border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.03); }
-  .btn-small{ padding:9px 16px; border-radius:8px; font-size:14px; }
-  a:focus-visible, button:focus-visible{
-    outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;
+  /* Premium Light/Dark Theme Variables */
+  :root {
+    /* Light Mode (Default) */
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-alt: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --border: #e2e8f0;
+    --border-light: rgba(15, 23, 42, 0.08);
+    
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --accent: #0ea5e9;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 8px 30px rgba(79, 70, 229, 0.2);
+    
+    --svg-grid: rgba(15, 23, 42, 0.04);
   }
 
-  /* Nav */
-  header{
-    position:sticky; top:0; z-index:50; backdrop-filter:blur(10px);
-    background:rgba(6,8,16,.8); border-bottom:1px solid var(--hairline);
+  html.dark {
+    /* Dark Mode */
+    --bg: #0b0f19;
+    --surface: #111827;
+    --surface-alt: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #1e293b;
+    --border-light: rgba(255, 255, 255, 0.08);
+    
+    --primary: #6366f1;
+    --primary-hover: #818cf8;
+    --accent: #38bdf8;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --shadow-glow: 0 8px 30px rgba(99, 102, 241, 0.25);
+    
+    --svg-grid: rgba(255, 255, 255, 0.03);
   }
-  nav.bar{
-    max-width:1100px; margin:0 auto; padding:0 20px; height:64px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  @media(min-width:640px){ nav.bar{padding:0 32px;} }
-  .brand{ display:flex; align-items:center; gap:8px; }
-  .brand-mark{
-    width:28px; height:28px; border-radius:8px;
-    background:linear-gradient(135deg,var(--indigo),var(--cyan));
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  }
-  .brand-name{ font-weight:600; font-size:17px; letter-spacing:-0.01em; color:#fff; }
-  .nav-links{ display:none; align-items:center; gap:32px; }
-  .nav-links a{ font-size:14px; color:#c3c8d6; transition:color .15s; }
-  .nav-links a:hover{ color:#fff; }
-  .nav-actions{ display:none; align-items:center; gap:12px; }
-  .nav-actions a.login-link{ font-size:14px; color:#c3c8d6; padding:8px 16px; border-radius:8px; }
-  .nav-actions a.login-link:hover{ color:#fff; }
-  @media(min-width:768px){
-    .nav-links{ display:flex; }
-    .nav-actions{ display:flex; }
-    .menu-btn{ display:none; }
-  }
-  .menu-btn{
-    background:none; border:none; color:#c3c8d6; padding:8px; cursor:pointer;
-  }
-  .mobile-menu{
-    display:none; border-top:1px solid var(--hairline); background:var(--void);
-    padding:16px 20px; flex-direction:column; gap:4px;
-  }
-  .mobile-menu.open{ display:flex; }
-  .mobile-menu a{ padding:10px 0; font-size:15px; color:#c3c8d6; }
-  .mobile-menu a:hover{ color:#fff; }
-  .mobile-menu hr{ border:none; border-top:1px solid var(--hairline); margin:8px 0; }
-  .mobile-menu .btn{ margin-top:4px; }
 
-  /* Hero */
-  .hero{
-    position:relative; overflow:hidden;
-    background-image:radial-gradient(circle at 1px 1px, rgba(255,255,255,.05) 1px, transparent 0);
-    background-size:28px 28px;
+  * { box-sizing: border-box; }
+  
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; 
   }
-  .hero-inner{
-    max-width:1100px; margin:0 auto; padding:64px 20px 64px;
-    display:grid; gap:48px; align-items:center;
-  }
-  @media(min-width:640px){ .hero-inner{ padding:96px 32px 80px; } }
-  @media(min-width:900px){ .hero-inner{ grid-template-columns:1fr 1fr; gap:32px; } }
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px; font-size:11px;
-    color:#a5b4fc; border:1px solid var(--hairline); border-radius:999px;
-    padding:6px 12px; margin-bottom:24px;
-  }
-  h1{
-    font-size:2.5rem; line-height:1.08; font-weight:600; letter-spacing:-0.02em;
-    color:#fff; margin:0;
-  }
-  @media(min-width:640px){ h1{ font-size:3.4rem; } }
-  .hero p.sub{
-    margin-top:24px; color:#a3aac0; font-size:16px; line-height:1.6; max-width:420px;
-  }
-  @media(min-width:640px){ .hero p.sub{ font-size:18px; } }
-  .hero-ctas{ margin-top:36px; display:flex; flex-direction:column; gap:12px; }
-  @media(min-width:480px){ .hero-ctas{ flex-direction:row; } }
-  .hero-visual{ display:flex; justify-content:center; }
-  @media(min-width:900px){ .hero-visual{ justify-content:flex-end; } }
-  .hero-visual svg{ width:100%; height:auto; max-width:420px; }
 
-  .pulse-dot{ animation:pulseDot 3.2s ease-in-out infinite; }
-  @keyframes pulseDot{ 0%,100%{opacity:.35;} 50%{opacity:1;} }
-  .line-draw{
-    stroke-dasharray:240; stroke-dashoffset:240; animation:drawLine 1.8s ease forwards;
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
-  @keyframes drawLine{ to{ stroke-dashoffset:0; } }
-  @media (prefers-reduced-motion: reduce){
-    .pulse-dot, .line-draw{ animation:none !important; }
-    html{ scroll-behavior:auto; }
+
+  .font-display { font-family: 'Space Grotesk', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; }
+  a { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+  
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  @media(min-width: 640px) { .wrap { padding: 0 32px; } }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 14px; font-weight: 500; padding: 12px 24px; border-radius: 10px;
+    border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: var(--shadow-md);
+  }
+  .btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+  }
+  .btn-primary.glow {
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover {
+    border-color: var(--primary);
+    background: var(--surface-alt);
+  }
+  .btn-small { padding: 8px 16px; border-radius: 8px; font-size: 14px; }
+  
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* Navigation */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(var(--bg), 0.8);
+    border-bottom: 1px solid var(--border);
+  }
+  /* Fallback for background transparency based on theme */
+  header { background: var(--bg); }
+  @supports (backdrop-filter: blur(12px)) {
+    html:not(.dark) header { background: rgba(248, 250, 252, 0.8); }
+    html.dark header { background: rgba(11, 15, 25, 0.8); }
+  }
+
+  nav.bar {
+    max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  @media(min-width: 640px) { nav.bar { padding: 0 32px; } }
+  
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .brand-name { font-weight: 600; font-size: 18px; letter-spacing: -0.02em; color: var(--text-main); }
+  
+  .nav-links { display: none; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+  .nav-links a:hover { color: var(--text-main); }
+  
+  .nav-actions { display: none; align-items: center; gap: 16px; }
+  .nav-actions a.login-link { font-size: 14px; font-weight: 500; color: var(--text-main); cursor: pointer; }
+  
+  .theme-toggle {
+    background: none; border: none; padding: 8px; border-radius: 8px;
+    color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { background: var(--surface-alt); color: var(--text-main); }
+  
+  .mobile-controls { display: flex; align-items: center; gap: 8px; }
+  .menu-btn {
+    background: none; border: none; color: var(--text-main); padding: 8px; cursor: pointer;
+  }
+  
+  @media(min-width: 900px) {
+    .nav-links { display: flex; }
+    .nav-actions { display: flex; }
+    .mobile-controls .menu-btn { display: none; }
+  }
+
+  .mobile-menu {
+    display: none; border-top: 1px solid var(--border); background: var(--surface);
+    padding: 20px 24px; flex-direction: column; gap: 8px;
+    position: absolute; width: 100%; left: 0; box-shadow: var(--shadow-lg);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { padding: 12px 0; font-size: 15px; font-weight: 500; color: var(--text-muted); }
+  .mobile-menu a:hover { color: var(--text-main); }
+  .mobile-menu hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; width: 100%; }
+
+  /* Hero Section */
+  .hero {
+    position: relative; overflow: hidden; padding: 60px 0 80px;
+    background-image: radial-gradient(circle at 2px 2px, var(--svg-grid) 2px, transparent 0);
+    background-size: 32px 32px;
+  }
+  .hero-inner {
+    max-width: 1100px; margin: 0 auto; padding: 0 24px;
+    display: grid; gap: 56px; align-items: center;
+  }
+  @media(min-width: 640px) { .hero-inner { padding: 0 32px; } }
+  @media(min-width: 900px) { .hero-inner { grid-template-columns: 1fr 1fr; gap: 40px; padding: 40px 32px 80px; } }
+  
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500;
+    color: var(--primary); background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: 999px; padding: 6px 14px; margin-bottom: 24px;
+  }
+  h1 {
+    font-size: 2.8rem; line-height: 1.1; font-weight: 700; letter-spacing: -0.03em;
+    color: var(--text-main); margin: 0;
+  }
+  @media(min-width: 640px) { h1 { font-size: 3.8rem; } }
+  
+  .hero p.sub {
+    margin-top: 24px; color: var(--text-muted); font-size: 16px; line-height: 1.6; max-width: 460px;
+  }
+  @media(min-width: 640px) { .hero p.sub { font-size: 18px; } }
+  
+  .hero-ctas { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+  @media(min-width: 480px) { .hero-ctas { flex-direction: row; } }
+  
+  .hero-visual { display: flex; justify-content: center; position: relative; }
+  @media(min-width: 900px) { .hero-visual { justify-content: flex-end; } }
+  .hero-visual svg { width: 100%; height: auto; max-width: 440px; drop-shadow: var(--shadow-lg); }
+
+  .pulse-dot { animation: pulseDot 3s ease-in-out infinite; }
+  @keyframes pulseDot { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+  .line-draw { stroke-dasharray: 240; stroke-dashoffset: 240; animation: drawLine 2s ease forwards; }
+  @keyframes drawLine { to { stroke-dashoffset: 0; } }
 
   /* Sections */
-  section.block{ border-top:1px solid var(--hairline); padding:64px 0; }
-  @media(min-width:640px){ section.block{ padding:80px 0; } }
-  .eyebrow-label{ font-size:11px; color:var(--muted); margin:0 0 12px; }
-  h2{ font-size:1.6rem; font-weight:600; letter-spacing:-0.01em; color:#fff; margin:0; }
-  @media(min-width:640px){ h2{ font-size:1.9rem; } }
-  .section-intro{ max-width:560px; margin-bottom:48px; }
-  .section-intro p.desc{ margin-top:12px; color:var(--muted); font-size:14px; line-height:1.6; }
+  section.block { padding: 80px 0; border-top: 1px solid var(--border); }
+  @media(min-width: 900px) { section.block { padding: 112px 0; } }
+  
+  .eyebrow-label { font-size: 12px; font-weight: 600; color: var(--primary); margin: 0 0 16px; }
+  h2 { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; color: var(--text-main); margin: 0; line-height: 1.2; }
+  @media(min-width: 640px) { h2 { font-size: 2.5rem; } }
+  
+  .section-intro { max-width: 600px; margin-bottom: 56px; }
+  .section-intro p.desc { margin-top: 16px; color: var(--text-muted); font-size: 16px; line-height: 1.6; }
 
-  .grid3{ display:grid; gap:20px; grid-template-columns:1fr; }
-  @media(min-width:640px){ .grid3{ grid-template-columns:repeat(3,1fr); } }
-  .grid4{ display:grid; gap:20px; grid-template-columns:1fr; }
-  @media(min-width:640px){ .grid4{ grid-template-columns:repeat(2,1fr); } }
-  @media(min-width:1024px){ .grid4{ grid-template-columns:repeat(4,1fr); } }
+  /* Grids */
+  .grid2 { display: grid; gap: 32px; grid-template-columns: 1fr; }
+  @media(min-width: 900px) { .grid2 { grid-template-columns: 1fr 1fr; align-items: start; gap: 64px; } }
+  
+  .grid4 { display: grid; gap: 24px; grid-template-columns: 1fr; }
+  @media(min-width: 640px) { .grid4 { grid-template-columns: repeat(2, 1fr); } }
+  @media(min-width: 1024px) { .grid4 { grid-template-columns: repeat(4, 1fr); } }
 
-  .card{
-    background:linear-gradient(180deg,var(--surface),var(--surface-2));
-    border:1px solid var(--hairline); border-radius:16px; padding:24px;
-    transition:border-color .2s ease, transform .2s ease;
+  /* Cards */
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px 24px; box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
   }
-  .card:hover{ border-color:rgba(139,92,246,.35); transform:translateY(-3px); }
-  .card svg.icon{ width:20px; height:20px; color:#a78bfa; margin-bottom:16px; display:block; }
-  .card h3{ font-size:15px; font-weight:600; color:#fff; margin:0 0 8px; }
-  .card p{ font-size:14px; color:var(--muted); line-height:1.6; margin:0; }
-  .card .icon-badge{
-    width:40px; height:40px; border-radius:10px; margin-bottom:20px;
-    background:linear-gradient(135deg, rgba(99,102,241,.2), rgba(34,211,238,.2));
-    border:1px solid var(--hairline); display:flex; align-items:center; justify-content:center;
+  .card:hover { box-shadow: var(--shadow-md); border-color: var(--border-light); transform: translateY(-2px); }
+  
+  .card .icon-badge {
+    width: 48px; height: 48px; border-radius: 12px; margin-bottom: 24px;
+    background: var(--surface-alt); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
   }
-  .card .icon-badge svg{ width:18px; height:18px; color:#a5b4fc; }
+  .card .icon-badge svg { width: 22px; height: 22px; color: var(--primary); }
+  .card h3 { font-size: 18px; font-weight: 600; color: var(--text-main); margin: 0 0 12px; }
+  .card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin: 0; }
 
-  .steps{ display:grid; gap:32px; grid-template-columns:1fr; }
-  @media(min-width:640px){ .steps{ grid-template-columns:repeat(3,1fr); gap:24px; } }
-  .step-num{ font-size:2.4rem; font-weight:600; font-family:'Space Grotesk',sans-serif; }
-  .step h3{ font-size:18px; font-weight:600; color:#fff; margin:12px 0 8px; font-family:'Space Grotesk',sans-serif;}
-  .step p{ font-size:14px; color:var(--muted); line-height:1.6; max-width:280px; margin:0; }
+  /* Steps */
+  .steps { display: grid; gap: 40px; grid-template-columns: 1fr; }
+  @media(min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
+  .step-num { font-size: 3rem; font-weight: 700; line-height: 1; }
+  .step h3 { font-size: 20px; font-weight: 600; color: var(--text-main); margin: 16px 0 12px; }
+  .step p { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin: 0; }
 
-  .why-grid{ display:grid; gap:40px; grid-template-columns:1fr; }
-  @media(min-width:900px){ .why-grid{ grid-template-columns:1fr 1fr; align-items:start; } }
-  .why-grid p.body{ margin-top:16px; color:var(--muted); font-size:14px; line-height:1.6; max-width:440px; }
-  .points{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
-  .points li{ display:flex; align-items:flex-start; gap:12px; font-size:14px; color:#c3c8d6; }
-  .points li .bullet{
-    margin-top:6px; width:6px; height:6px; border-radius:50%; flex-shrink:0;
-    background:linear-gradient(135deg,#818cf8,#67e8f9);
-  }
-
-  .final-cta{ text-align:center; padding:80px 0 96px; }
-  .final-cta h2{ font-size:1.9rem; }
-  @media(min-width:640px){ .final-cta h2{ font-size:2.4rem; } }
-  .final-cta p{ margin-top:16px; color:var(--muted); font-size:16px; }
-  .final-cta .btn{ margin-top:32px; }
-
-  /* Auth entry */
-  .auth-grid{ display:grid; gap:20px; grid-template-columns:1fr; }
-  @media(min-width:640px){ .auth-grid{ grid-template-columns:1fr 1fr; } }
-  .auth-card h3{ font-family:'Space Grotesk',sans-serif; font-size:16px; color:#fff; margin:0 0 4px;}
-  .auth-card p.note{ font-size:13px; color:var(--muted); margin:0 0 20px; }
-  .field{ margin-bottom:14px; }
-  .field label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
-  .field input{
-    width:100%; padding:11px 14px; border-radius:8px; border:1px solid var(--hairline);
-    background:rgba(255,255,255,.02); color:#fff; font-size:14px; font-family:'Inter',sans-serif;
-  }
-  .field input::placeholder{ color:#565d70; }
-  .field input:disabled{ opacity:.5; cursor:not-allowed; }
-  .auth-card button[disabled]{
-    width:100%; opacity:.5; cursor:not-allowed; margin-top:6px;
-  }
-  .forgot-link{ display:block; text-align:center; font-size:13px; color:var(--muted); margin-top:14px; }
-  .stage-note{
-    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.04em;
-    color:#6b7280; text-align:center; margin-top:28px;
+  /* About List */
+  .why-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 16px; font-size: 16px; color: var(--text-muted); line-height: 1.5; }
+  .why-list li .bullet-icon {
+    margin-top: 2px; width: 20px; height: 20px; flex-shrink: 0; color: var(--primary);
   }
 
   /* Footer */
-  footer{ border-top:1px solid var(--hairline); padding:48px 0; }
-  .footer-top{ display:flex; flex-direction:column; gap:32px; justify-content:space-between; }
-  @media(min-width:640px){ .footer-top{ flex-direction:row; } }
-  .footer-brand{ max-width:280px; }
-  .footer-brand .brand{ margin-bottom:12px; }
-  .footer-brand p{ font-size:14px; color:var(--muted); line-height:1.6; margin:0; }
-  .footer-links{ display:grid; grid-template-columns:repeat(2,1fr); gap:32px; font-size:14px; }
-  @media(min-width:640px){ .footer-links{ grid-template-columns:repeat(3,1fr); } }
-  .footer-links h4{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em; color:var(--muted); margin:0 0 12px; font-weight:400; }
-  .footer-links ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
-  .footer-links a{ color:#c3c8d6; }
-  .footer-links a:hover{ color:#fff; }
-  .footer-links li.muted{ color:var(--muted); }
-  .footer-rule{ height:1px; background:var(--hairline); margin:32px 0; border:none; }
-  .copyright{ font-size:12px; color:var(--muted); margin:0; }
+  footer { border-top: 1px solid var(--border); padding: 64px 0 40px; background: var(--surface); }
+  .footer-top { display: flex; flex-direction: column; gap: 48px; justify-content: space-between; }
+  @media(min-width: 900px) { .footer-top { flex-direction: row; } }
+  
+  .footer-brand { max-width: 320px; }
+  .footer-brand .brand { margin-bottom: 16px; }
+  .footer-brand p { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin: 0; }
+  
+  .footer-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+  @media(min-width: 640px) { .footer-links { grid-template-columns: repeat(3, 1fr); gap: 64px; } }
+  .footer-links h4 { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-main); margin: 0 0 20px; }
+  .footer-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a { color: var(--text-muted); font-size: 14px; }
+  .footer-links a:hover { color: var(--primary); }
+  
+  .footer-rule { height: 1px; background: var(--border); margin: 48px 0 24px; border: none; }
+  .copyright { font-size: 14px; color: var(--text-muted); margin: 0; text-align: center; }
+
+  /* Auth Modals (Stage 1 UI Preview) */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    z-index: 100; display: none; align-items: center; justify-content: center;
+    padding: 20px; opacity: 0; transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active { display: flex; opacity: 1; }
+  
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    width: 100%; max-width: 440px; padding: 40px 32px; box-shadow: var(--shadow-lg);
+    position: relative; display: none;
+  }
+  .modal-box.active { display: block; }
+  
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; background: none; border: none;
+    color: var(--text-muted); padding: 8px; cursor: pointer; border-radius: 8px;
+  }
+  .modal-close:hover { background: var(--surface-alt); color: var(--text-main); }
+  
+  .auth-header { text-align: center; margin-bottom: 32px; }
+  .auth-header h3 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; margin: 0 0 8px; color: var(--text-main); }
+  .auth-header p { font-size: 14px; color: var(--text-muted); margin: 0; }
+  
+  .form-group { margin-bottom: 20px; text-align: left; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-main); margin-bottom: 8px; }
+  .input-wrapper { position: relative; }
+  .form-group input {
+    width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text-main); font-size: 15px; font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+  .form-group input::placeholder { color: var(--text-muted); opacity: 0.6; }
+  
+  .toggle-pwd {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;
+  }
+  
+  .auth-btn { width: 100%; padding: 14px; font-size: 15px; margin-top: 8px; }
+  
+  .auth-links { margin-top: 24px; text-align: center; font-size: 14px; color: var(--text-muted); }
+  .auth-links a { color: var(--primary); font-weight: 500; cursor: pointer; }
+  .auth-links a:hover { text-decoration: underline; }
+  
+  .stage-msg {
+    display: none; margin-top: 16px; padding: 12px; border-radius: 8px;
+    background: var(--surface-alt); border: 1px solid var(--border);
+    font-size: 13px; color: var(--text-main); text-align: center; font-weight: 500;
+  }
+
 </style>
 </head>
 <body>
@@ -234,287 +354,243 @@
   <nav class="bar">
     <a href="#home" class="brand">
       <span class="brand-mark">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#060810" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
       </span>
       <span class="brand-name font-display">Crest Learning</span>
     </a>
 
     <div class="nav-links">
-      <a href="#home">Home</a>
       <a href="#features">Features</a>
       <a href="#how-it-works">How It Works</a>
       <a href="#about">About</a>
     </div>
 
     <div class="nav-actions">
-      <a href="#login" class="login-link">Log in</a>
-      <a href="#register" class="btn btn-primary btn-small">Get Started</a>
+      <button class="theme-toggle" id="themeToggleDesk" aria-label="Toggle theme">
+        <svg class="sun-icon" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+      <a class="login-link" onclick="openModal('login')">Log in</a>
+      <button onclick="openModal('register')" class="btn btn-primary btn-small">Get Started</button>
     </div>
 
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-      <svg id="menuIconOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      <svg id="menuIconClose" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
+    <div class="mobile-controls">
+      <button class="theme-toggle" id="themeToggleMob" aria-label="Toggle theme">
+        <svg class="sun-icon" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <svg id="menuIconOpen" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg id="menuIconClose" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#home">Home</a>
     <a href="#features">Features</a>
     <a href="#how-it-works">How It Works</a>
     <a href="#about">About</a>
     <hr>
-    <a href="#login">Log in</a>
-    <a href="#register" class="btn btn-primary">Get Started</a>
+    <a onclick="openModal('login'); document.getElementById('menuBtn').click();">Log in</a>
+    <a onclick="openModal('register'); document.getElementById('menuBtn').click();" style="color: var(--primary); font-weight: 600;">Get Started</a>
   </div>
 </header>
 
-<section class="hero" id="home">
-  <div class="hero-inner">
-    <div>
-      <div class="eyebrow font-mono">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.6L19 9l-5.4 1.4L12 16l-1.6-5.6L5 9l5.4-1.4L12 2z"/></svg>
-        GUIDED · HANDS-ON · PRACTICAL
-      </div>
-      <h1 class="font-display">
-        Learn AI.<br>
-        Build skills.<br>
-        <span class="gradient-text">Create more.</span>
-      </h1>
-      <p class="sub">
-        Master practical AI skills through guided learning, hands-on practice, and intelligent assistance.
-      </p>
-      <div class="hero-ctas">
-        <a href="#register" class="btn btn-primary glow">
-          Start Learning
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-        <a href="#features" class="btn btn-ghost">Explore AI Skills</a>
-      </div>
-    </div>
-
-    <div class="hero-visual">
-      <svg viewBox="0 0 440 380" role="img" aria-label="Diagram of a guided AI learning path connecting Learn, Practice, Understand and Apply">
-        <defs>
-          <linearGradient id="edgeGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#6366f1"/>
-            <stop offset="100%" stop-color="#22d3ee"/>
-          </linearGradient>
-          <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.55"/>
-            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
-          </radialGradient>
-          <path id="pathLA" d="M 60 190 L 380 175"/>
-        </defs>
-
-        <line x1="60" y1="190" x2="220" y2="80" stroke="url(#edgeGrad)" stroke-width="1.4" stroke-opacity="0.55" class="line-draw" style="animation-delay:0ms"/>
-        <line x1="60" y1="190" x2="210" y2="300" stroke="url(#edgeGrad)" stroke-width="1.4" stroke-opacity="0.55" class="line-draw" style="animation-delay:150ms"/>
-        <line x1="220" y1="80" x2="380" y2="175" stroke="url(#edgeGrad)" stroke-width="1.4" stroke-opacity="0.55" class="line-draw" style="animation-delay:300ms"/>
-        <line x1="210" y1="300" x2="380" y2="175" stroke="url(#edgeGrad)" stroke-width="1.4" stroke-opacity="0.55" class="line-draw" style="animation-delay:450ms"/>
-
-        <circle r="3.5" fill="#22d3ee">
-          <animateMotion dur="6s" repeatCount="indefinite" begin="0.5s">
-            <mpath href="#pathLA"/>
-          </animateMotion>
-        </circle>
-
-        <g>
-          <circle cx="60" cy="190" r="34" fill="url(#nodeGlow)"/>
-          <circle cx="60" cy="190" r="15" fill="#0d1220" stroke="url(#edgeGrad)" stroke-width="1.2"/>
-          <circle cx="60" cy="190" r="3.5" fill="#c7d2fe" class="pulse-dot"/>
-          <text x="60" y="222" text-anchor="middle" fill="#8992aa" font-size="12" font-family="JetBrains Mono, monospace" letter-spacing="0.05em">Learn</text>
-        </g>
-        <g>
-          <circle cx="220" cy="80" r="34" fill="url(#nodeGlow)"/>
-          <circle cx="220" cy="80" r="15" fill="#0d1220" stroke="url(#edgeGrad)" stroke-width="1.2"/>
-          <circle cx="220" cy="80" r="3.5" fill="#c7d2fe" class="pulse-dot"/>
-          <text x="220" y="112" text-anchor="middle" fill="#8992aa" font-size="12" font-family="JetBrains Mono, monospace" letter-spacing="0.05em">Practice</text>
-        </g>
-        <g>
-          <circle cx="210" cy="300" r="34" fill="url(#nodeGlow)"/>
-          <circle cx="210" cy="300" r="15" fill="#0d1220" stroke="url(#edgeGrad)" stroke-width="1.2"/>
-          <circle cx="210" cy="300" r="3.5" fill="#c7d2fe" class="pulse-dot"/>
-          <text x="210" y="332" text-anchor="middle" fill="#8992aa" font-size="12" font-family="JetBrains Mono, monospace" letter-spacing="0.05em">Understand</text>
-        </g>
-        <g>
-          <circle cx="380" cy="175" r="34" fill="url(#nodeGlow)"/>
-          <circle cx="380" cy="175" r="15" fill="#0d1220" stroke="url(#edgeGrad)" stroke-width="1.2"/>
-          <circle cx="380" cy="175" r="3.5" fill="#c7d2fe" class="pulse-dot"/>
-          <text x="380" y="207" text-anchor="middle" fill="#8992aa" font-size="12" font-family="JetBrains Mono, monospace" letter-spacing="0.05em">Apply</text>
-        </g>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<section class="block">
-  <div class="wrap">
-    <div class="section-intro">
-      <p class="eyebrow-label font-mono">PHILOSOPHY</p>
-      <h2 class="font-display">Built around doing, not just reading.</h2>
-    </div>
-    <div class="grid3">
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        <h3 class="font-display">Learn practically</h3>
-        <p>Every concept is introduced through a real, workable example — not abstract theory first.</p>
-      </div>
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-        <h3 class="font-display">Practice what you learn</h3>
-        <p>Each idea is paired with a hands-on exercise, so understanding turns into ability.</p>
-      </div>
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-2 7.5V17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5A4 4 0 0 0 16 7V6a4 4 0 0 0-4-4z"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-        <h3 class="font-display">Apply with confidence</h3>
-        <p>Skills are framed around real tasks, so you know exactly where to use what you've learned.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="block" id="features">
-  <div class="wrap">
-    <div class="section-intro">
-      <p class="eyebrow-label font-mono">THE EXPERIENCE</p>
-      <h2 class="font-display">A learning path, not a content library.</h2>
-      <p class="desc">A preview of how the experience is designed to feel once each module goes live.</p>
-    </div>
-    <div class="grid4">
-      <div class="card">
-        <span class="icon-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </span>
-        <h3 class="font-display">Learn</h3>
-        <p>Clear, guided explanations of practical AI concepts.</p>
-      </div>
-      <div class="card">
-        <span class="icon-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-        </span>
-        <h3 class="font-display">Practice</h3>
-        <p>Structured exercises that reinforce each new skill.</p>
-      </div>
-      <div class="card">
-        <span class="icon-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-2 7.5V17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5A4 4 0 0 0 16 7V6a4 4 0 0 0-4-4z"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-        </span>
-        <h3 class="font-display">Understand</h3>
-        <p>Context on how and why a technique actually works.</p>
-      </div>
-      <div class="card">
-        <span class="icon-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-        </span>
-        <h3 class="font-display">Apply</h3>
-        <p>Direction on where a skill fits in real work.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="block" id="how-it-works">
-  <div class="wrap">
-    <p class="eyebrow-label font-mono">HOW IT WORKS</p>
-    <h2 class="font-display" style="margin-bottom:48px;">Three steps. Every time.</h2>
-    <div class="steps">
-      <div class="step">
-        <span class="step-num gradient-text font-display">01</span>
-        <h3>Learn</h3>
-        <p>Understand the concept through a focused, guided explanation.</p>
-      </div>
-      <div class="step">
-        <span class="step-num gradient-text font-display">02</span>
-        <h3>Practice</h3>
-        <p>Apply what you learned in a hands-on exercise built for it.</p>
-      </div>
-      <div class="step">
-        <span class="step-num gradient-text font-display">03</span>
-        <h3>Build</h3>
-        <p>Use your new skill to create a practical, real result.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="block" id="about">
-  <div class="wrap">
-    <div class="why-grid">
+<main>
+  <section class="hero" id="home">
+    <div class="hero-inner">
       <div>
-        <p class="eyebrow-label font-mono">WHY CREST LEARNING</p>
-        <h2 class="font-display">Designed for how AI skills are actually learned.</h2>
-        <p class="body">No unnecessary complexity, no wall of theory. Crest Learning is built around a simple idea: understanding sticks when it's practiced, not just presented.</p>
+        <div class="eyebrow font-mono">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.6L19 9l-5.4 1.4L12 16l-1.6-5.6L5 9l5.4-1.4L12 2z"/></svg>
+          CREST LEARNING
+        </div>
+        <h1 class="font-display">
+          Learn AI.<br>
+          Build skills.<br>
+          <span class="gradient-text">Create more.</span>
+        </h1>
+        <p class="sub">
+          Master practical AI skills through guided learning, hands-on practice, and intelligent assistance.
+        </p>
+        <div class="hero-ctas">
+          <button onclick="openModal('register')" class="btn btn-primary glow">
+            Start Learning
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+          <a href="#features" class="btn btn-ghost">Explore AI Skills</a>
+        </div>
       </div>
-      <ul class="points">
-        <li><span class="bullet"></span>A simple, uncluttered learning experience</li>
-        <li><span class="bullet"></span>Focused on practical, applicable AI skills</li>
-        <li><span class="bullet"></span>Explanations built for genuine beginners</li>
-        <li><span class="bullet"></span>A guided path instead of a scattered library</li>
-        <li><span class="bullet"></span>Learning reinforced by doing, not just reading</li>
-      </ul>
-    </div>
-  </div>
-</section>
 
-<!--
-  AUTHENTICATION ENTRY (Stage 1)
-  UI placeholders only. Inputs are disabled and buttons are inert —
-  no accounts, sessions, or backend requests exist yet. Real
-  authentication is planned for Stage 2.
--->
-<section class="block" id="auth">
-  <div class="wrap">
-    <div class="section-intro">
-      <p class="eyebrow-label font-mono">ACCOUNT ACCESS</p>
-      <h2 class="font-display">Log in or register.</h2>
-      <p class="desc">Authentication isn't active yet — this is a preview of the entry screens.</p>
-    </div>
-    <div class="auth-grid">
-      <div class="card auth-card" id="login">
-        <h3>Log in</h3>
-        <p class="note">Preview only — sign-in is not yet active.</p>
-        <div class="field">
-          <label for="login-email">Email</label>
-          <input id="login-email" type="email" placeholder="you@example.com" disabled>
-        </div>
-        <div class="field">
-          <label for="login-password">Password</label>
-          <input id="login-password" type="password" placeholder="••••••••" disabled>
-        </div>
-        <button class="btn btn-primary" disabled>Log in</button>
-        <a href="#forgot-password" class="forgot-link">Forgot password?</a>
-      </div>
-      <div class="card auth-card" id="register">
-        <h3>Register</h3>
-        <p class="note">Preview only — account creation is not yet active.</p>
-        <div class="field">
-          <label for="register-name">Full name</label>
-          <input id="register-name" type="text" placeholder="Your name" disabled>
-        </div>
-        <div class="field">
-          <label for="register-email">Email</label>
-          <input id="register-email" type="email" placeholder="you@example.com" disabled>
-        </div>
-        <div class="field">
-          <label for="register-password">Password</label>
-          <input id="register-password" type="password" placeholder="••••••••" disabled>
-        </div>
-        <button class="btn btn-primary" disabled>Create account</button>
-      </div>
-    </div>
-    <p class="stage-note" id="forgot-password">FORGOT-PASSWORD FLOW — ARRIVING IN STAGE 2</p>
-  </div>
-</section>
+      <div class="hero-visual">
+        <svg viewBox="0 0 440 380" role="img" aria-label="Conceptual diagram of the Crest Learning journey">
+          <defs>
+            <linearGradient id="edgeGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--primary)"/>
+              <stop offset="100%" stop-color="var(--accent)"/>
+            </linearGradient>
+            <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+            </radialGradient>
+            <path id="pathLA" d="M 60 190 L 380 175"/>
+          </defs>
 
-<section class="final-cta">
-  <div class="wrap">
-    <h2 class="font-display">Start building your AI skills.</h2>
-    <p>Begin your journey toward practical AI skills.</p>
-    <a href="#register" class="btn btn-primary glow">
-      Get Started
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
-  </div>
-</section>
+          <!-- Connecting Lines -->
+          <line x1="60" y1="190" x2="220" y2="80" stroke="url(#edgeGrad)" stroke-width="2" stroke-opacity="0.6" class="line-draw" style="animation-delay:0ms"/>
+          <line x1="60" y1="190" x2="210" y2="300" stroke="url(#edgeGrad)" stroke-width="2" stroke-opacity="0.6" class="line-draw" style="animation-delay:150ms"/>
+          <line x1="220" y1="80" x2="380" y2="175" stroke="url(#edgeGrad)" stroke-width="2" stroke-opacity="0.6" class="line-draw" style="animation-delay:300ms"/>
+          <line x1="210" y1="300" x2="380" y2="175" stroke="url(#edgeGrad)" stroke-width="2" stroke-opacity="0.6" class="line-draw" style="animation-delay:450ms"/>
+
+          <!-- Animated Data Point -->
+          <circle r="4" fill="var(--accent)">
+            <animateMotion dur="5s" repeatCount="indefinite" begin="0.5s">
+              <mpath href="#pathLA"/>
+            </animateMotion>
+          </circle>
+
+          <!-- Nodes -->
+          <g>
+            <circle cx="60" cy="190" r="40" fill="url(#nodeGlow)"/>
+            <circle cx="60" cy="190" r="16" fill="var(--surface)" stroke="url(#edgeGrad)" stroke-width="2"/>
+            <circle cx="60" cy="190" r="4" fill="var(--primary)" class="pulse-dot"/>
+            <text x="60" y="230" text-anchor="middle" fill="var(--text-muted)" font-size="13" font-family="JetBrains Mono, monospace" font-weight="500">Learn</text>
+          </g>
+          <g>
+            <circle cx="220" cy="80" r="40" fill="url(#nodeGlow)"/>
+            <circle cx="220" cy="80" r="16" fill="var(--surface)" stroke="url(#edgeGrad)" stroke-width="2"/>
+            <circle cx="220" cy="80" r="4" fill="var(--primary)" class="pulse-dot"/>
+            <text x="220" y="120" text-anchor="middle" fill="var(--text-muted)" font-size="13" font-family="JetBrains Mono, monospace" font-weight="500">Practice</text>
+          </g>
+          <g>
+            <circle cx="210" cy="300" r="40" fill="url(#nodeGlow)"/>
+            <circle cx="210" cy="300" r="16" fill="var(--surface)" stroke="url(#edgeGrad)" stroke-width="2"/>
+            <circle cx="210" cy="300" r="4" fill="var(--primary)" class="pulse-dot"/>
+            <text x="210" y="340" text-anchor="middle" fill="var(--text-muted)" font-size="13" font-family="JetBrains Mono, monospace" font-weight="500">Understand</text>
+          </g>
+          <g>
+            <circle cx="380" cy="175" r="40" fill="url(#nodeGlow)"/>
+            <circle cx="380" cy="175" r="16" fill="var(--surface)" stroke="url(#edgeGrad)" stroke-width="2"/>
+            <circle cx="380" cy="175" r="4" fill="var(--primary)" class="pulse-dot"/>
+            <text x="380" y="215" text-anchor="middle" fill="var(--text-muted)" font-size="13" font-family="JetBrains Mono, monospace" font-weight="500">Apply</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="grid2">
+        <div>
+          <p class="eyebrow-label font-mono">ABOUT CREST LEARNING</p>
+          <h2 class="font-display">What is Crest Learning?</h2>
+          <p class="desc" style="margin-bottom: 24px; color: var(--text-main);">
+            Crest Learning is an AI-powered learning platform designed to help people develop practical AI skills through guided learning, hands-on practice, and real-world application.
+          </p>
+          <p class="desc">
+            Our philosophy is built around doing, not just reading. We believe that true understanding sticks when knowledge is practiced, not merely presented as abstract theory. 
+          </p>
+          <p class="desc">
+            Designed for genuine beginners and aspiring professionals, Crest Learning provides a clear, uncluttered path to mastering modern technology skills. We remove unnecessary complexity, ensuring every lesson translates directly into practical ability.
+          </p>
+        </div>
+        <div>
+          <ul class="why-list">
+            <li>
+              <svg class="bullet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>A simple learning experience.</strong> No wall of theory, just clear, guided explanations built for genuine comprehension.</span>
+            </li>
+            <li>
+              <svg class="bullet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Focused on practical ability.</strong> Every concept is paired with an actionable exercise to turn reading into doing.</span>
+            </li>
+            <li>
+              <svg class="bullet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>A guided path.</strong> Avoid the confusion of scattered content libraries with a structured journey from basics to application.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="features">
+    <div class="wrap">
+      <div class="section-intro">
+        <p class="eyebrow-label font-mono">THE EXPERIENCE</p>
+        <h2 class="font-display">A learning path, not a library.</h2>
+        <p class="desc">The conceptual design for the Crest Learning experience ensures every skill is deeply understood and readily applicable.</p>
+      </div>
+      <div class="grid4">
+        <div class="card">
+          <span class="icon-badge">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </span>
+          <h3 class="font-display">Learn</h3>
+          <p>Clear, guided explanations of practical AI concepts designed to make complex topics approachable.</p>
+        </div>
+        <div class="card">
+          <span class="icon-badge">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </span>
+          <h3 class="font-display">Practice</h3>
+          <p>Structured, hands-on exercises tailored to reinforce each new skill immediately after learning it.</p>
+        </div>
+        <div class="card">
+          <span class="icon-badge">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-2 7.5V17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5A4 4 0 0 0 16 7V6a4 4 0 0 0-4-4z"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+          </span>
+          <h3 class="font-display">Understand</h3>
+          <p>Gain vital context on how and why techniques actually work, removing the mystery from the tools.</p>
+        </div>
+        <div class="card">
+          <span class="icon-badge">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+          </span>
+          <h3 class="font-display">Apply</h3>
+          <p>Clear direction on where a newly acquired skill fits into real work and everyday projects.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="how-it-works">
+    <div class="wrap">
+      <p class="eyebrow-label font-mono">HOW IT WORKS</p>
+      <h2 class="font-display" style="margin-bottom: 56px;">Three steps. Every time.</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num gradient-text font-display">01</span>
+          <h3>Learn</h3>
+          <p>Understand the core concept through a focused, distraction-free explanation.</p>
+        </div>
+        <div class="step">
+          <span class="step-num gradient-text font-display">02</span>
+          <h3>Practice</h3>
+          <p>Apply what you learned in a hands-on exercise explicitly built for it.</p>
+        </div>
+        <div class="step">
+          <span class="step-num gradient-text font-display">03</span>
+          <h3>Build</h3>
+          <p>Use your reinforced skill to create a practical, tangible result.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="text-align: center; padding: 100px 0;">
+    <div class="wrap">
+      <h2 class="font-display">Start building your AI skills.</h2>
+      <p class="desc" style="margin: 16px auto 32px; max-width: 500px; color: var(--text-muted);">
+        Begin your journey toward practical, applicable AI knowledge.
+      </p>
+      <button onclick="openModal('register')" class="btn btn-primary glow btn-lg">
+        Get Started
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </section>
+</main>
 
 <footer>
   <div class="wrap">
@@ -522,32 +598,33 @@
       <div class="footer-brand">
         <div class="brand">
           <span class="brand-mark">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#060810" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
           </span>
-          <span class="brand-name font-display" style="font-size:15px;">Crest Learning</span>
+          <span class="brand-name font-display">Crest Learning</span>
         </div>
-        <p>An AI-powered learning platform for developing practical AI skills through guided, hands-on learning.</p>
+        <p>An AI-powered learning platform designed to help people develop practical AI skills through simple, guided, hands-on learning.</p>
       </div>
       <div class="footer-links">
         <div>
-          <h4 class="font-mono">PLATFORM</h4>
+          <h4 class="font-mono">Platform</h4>
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#about">About</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="font-mono">ACCOUNT</h4>
+          <h4 class="font-mono">Account</h4>
           <ul>
-            <li><a href="#login">Log in</a></li>
-            <li><a href="#register">Register</a></li>
+            <li><a onclick="openModal('login')" style="cursor:pointer;">Log in</a></li>
+            <li><a onclick="openModal('register')" style="cursor:pointer;">Register</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="font-mono">CONTACT</h4>
+          <h4 class="font-mono">Contact</h4>
           <ul>
-            <li class="muted">[contact email placeholder]</li>
+            <li><a href="mailto:crestacademyteam@gmail.com">crestacademyteam@gmail.com</a></li>
           </ul>
         </div>
       </div>
@@ -557,22 +634,114 @@
   </div>
 </footer>
 
-<script>
-  // Mobile menu toggle
-  var menuBtn = document.getElementById('menuBtn');
-  var mobileMenu = document.getElementById('mobileMenu');
-  var iconOpen = document.getElementById('menuIconOpen');
-  var iconClose = document.getElementById('menuIconClose');
+<!-- Authentication Modals (Stage 1 UI Preview) -->
+<div class="modal-overlay" id="authOverlay">
+  <!-- Login Panel -->
+  <div class="modal-box" id="panel-login">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="auth-header">
+      <h3>Welcome back</h3>
+      <p>Log in to your Crest Learning account.</p>
+    </div>
+    <form onsubmit="handleAuthSubmit(event, 'login')">
+      <div class="form-group">
+        <label for="login-email">Email Address</label>
+        <input id="login-email" type="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <div class="input-wrapper">
+          <input id="login-password" type="password" placeholder="••••••••" required>
+          <button type="button" class="toggle-pwd" onclick="togglePassword('login-password')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary auth-btn">Log in</button>
+      <div id="msg-login" class="stage-msg"></div>
+    </form>
+    <div class="auth-links">
+      <a onclick="switchPanel('forgot')">Forgot password?</a><br><br>
+      Don't have an account? <a onclick="switchPanel('register')">Register</a>
+    </div>
+  </div>
 
-  menuBtn.addEventListener('click', function () {
-    var isOpen = mobileMenu.classList.toggle('open');
-    menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  <!-- Register Panel -->
+  <div class="modal-box" id="panel-register">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="auth-header">
+      <h3>Create an account</h3>
+      <p>Start developing practical AI skills.</p>
+    </div>
+    <form onsubmit="handleAuthSubmit(event, 'register')">
+      <div class="form-group">
+        <label for="reg-name">Full Name</label>
+        <input id="reg-name" type="text" placeholder="Your name" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email Address</label>
+        <input id="reg-email" type="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <div class="input-wrapper">
+          <input id="reg-password" type="password" placeholder="••••••••" required>
+          <button type="button" class="toggle-pwd" onclick="togglePassword('reg-password')">
+             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary auth-btn">Create account</button>
+      <div id="msg-register" class="stage-msg"></div>
+    </form>
+    <div class="auth-links">
+      Already have an account? <a onclick="switchPanel('login')">Log in</a>
+    </div>
+  </div>
+
+  <!-- Forgot Password Panel -->
+  <div class="modal-box" id="panel-forgot">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="auth-header">
+      <h3>Reset password</h3>
+      <p>Enter your email to receive a reset link.</p>
+    </div>
+    <form onsubmit="handleAuthSubmit(event, 'forgot')">
+      <div class="form-group">
+        <label for="forgot-email">Email Address</label>
+        <input id="forgot-email" type="email" placeholder="you@example.com" required>
+      </div>
+      <button type="submit" class="btn btn-primary auth-btn">Send reset link</button>
+      <div id="msg-forgot" class="stage-msg"></div>
+    </form>
+    <div class="auth-links">
+      <a onclick="switchPanel('login')">Back to Log in</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Mobile Menu Logic
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const iconOpen = document.getElementById('menuIconOpen');
+  const iconClose = document.getElementById('menuIconClose');
+
+  menuBtn.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', isOpen);
     iconOpen.style.display = isOpen ? 'none' : 'block';
     iconClose.style.display = isOpen ? 'block' : 'none';
   });
 
-  mobileMenu.querySelectorAll('a').forEach(function (link) {
-    link.addEventListener('click', function () {
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
       menuBtn.setAttribute('aria-expanded', 'false');
       iconOpen.style.display = 'block';
@@ -580,8 +749,100 @@
     });
   });
 
-  // Footer year
+  // Theme Logic (Light/Dark Mode)
+  const htmlEl = document.documentElement;
+  const themeToggleDesk = document.getElementById('themeToggleDesk');
+  const themeToggleMob = document.getElementById('themeToggleMob');
+  
+  function updateThemeIcons(isDark) {
+    document.querySelectorAll('.sun-icon').forEach(icon => icon.style.display = isDark ? 'block' : 'none');
+    document.querySelectorAll('.moon-icon').forEach(icon => icon.style.display = isDark ? 'none' : 'block');
+  }
+
+  function setTheme(isDark) {
+    if (isDark) {
+      htmlEl.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      htmlEl.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+    updateThemeIcons(isDark);
+  }
+
+  // Initialize theme
+  const savedTheme = localStorage.getItem('theme');
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+    setTheme(true);
+  } else {
+    setTheme(false); // Default to light if no pref
+  }
+
+  function toggleTheme() {
+    setTheme(!htmlEl.classList.contains('dark'));
+  }
+  
+  themeToggleDesk.addEventListener('click', toggleTheme);
+  themeToggleMob.addEventListener('click', toggleTheme);
+
+  // Footer Year
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Authentication UI Logic (Stage 1 Preview)
+  const overlay = document.getElementById('authOverlay');
+  const panels = {
+    login: document.getElementById('panel-login'),
+    register: document.getElementById('panel-register'),
+    forgot: document.getElementById('panel-forgot')
+  };
+
+  function openModal(panelId) {
+    // Reset messages
+    document.querySelectorAll('.stage-msg').forEach(msg => {
+      msg.style.display = 'none';
+      msg.textContent = '';
+    });
+    
+    Object.values(panels).forEach(p => p.classList.remove('active'));
+    panels[panelId].classList.add('active');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+
+  function switchPanel(panelId) {
+    document.querySelectorAll('.stage-msg').forEach(msg => msg.style.display = 'none');
+    Object.values(panels).forEach(p => p.classList.remove('active'));
+    panels[panelId].classList.add('active');
+  }
+
+  function closeModal() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Close modal on outside click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function handleAuthSubmit(e, type) {
+    e.preventDefault();
+    const msgBox = document.getElementById(`msg-${type}`);
+    msgBox.style.display = 'block';
+    
+    if (type === 'forgot') {
+      msgBox.textContent = 'Password recovery will be connected in Stage 2.';
+    } else {
+      msgBox.textContent = 'Authentication will be connected in Stage 2.';
+    }
+  }
 </script>
 
 </body>
