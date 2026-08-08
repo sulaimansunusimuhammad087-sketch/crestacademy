@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   sendPasswordResetEmail,
+  updateProfile,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { 
@@ -18,7 +19,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Helper to convert Firebase errors to beautiful, user-friendly UI messages
 function getFriendlyErrorMessage(code) {
   switch(code) {
     case 'auth/invalid-credential': 
@@ -49,7 +49,6 @@ window.handleAuthSubmit = async function(e, type) {
   const msgBox = document.getElementById(`msg-${type}`);
   const submitBtn = e.target.querySelector('button[type="submit"]');
   
-  // UI Loading State
   msgBox.style.display = 'block';
   msgBox.style.color = 'var(--text-main)';
   msgBox.style.textAlign = 'center';
@@ -66,7 +65,10 @@ window.handleAuthSubmit = async function(e, type) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
-      // 2. Create securely structured profile in Firestore
+      // 2. Attach name directly to Auth object (Immune to database failures)
+      await updateProfile(user, { displayName: name });
+      
+      // 3. Create securely structured profile in Firestore
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name: name,
@@ -97,12 +99,9 @@ window.handleAuthSubmit = async function(e, type) {
       e.target.reset(); // clear the field
     }
   } catch (error) {
-    // Keep raw error in console for your debugging
     console.error("Auth Error Code:", error.code);
     console.error("Auth Error Message:", error.message);
-    
-    // Display beautiful, user-friendly error message in the UI
-    msgBox.style.color = '#ef4444'; // Premium Red error
+    msgBox.style.color = '#ef4444'; // Red error
     msgBox.textContent = getFriendlyErrorMessage(error.code);
   } finally {
     submitBtn.disabled = false;
