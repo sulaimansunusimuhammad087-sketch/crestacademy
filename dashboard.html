@@ -167,8 +167,20 @@
   </main>
 </div>
 
+<!-- Scripts -->
 <script src="js/main.js"></script>
 <script type="module" src="js/dashboard.js"></script>
+
+<!-- ULTIMATE FAILSAFE: Guarantee the loading screen disappears after 4 seconds -->
+<script>
+  setTimeout(function() {
+    var overlay = document.getElementById('loading-overlay');
+    if (overlay && overlay.style.display !== 'none') {
+      overlay.style.display = 'none';
+      console.warn("Loading overlay forcefully removed to prevent infinite spinner.");
+    }
+  }, 4000);
+</script>
 
 </body>
 </html>
