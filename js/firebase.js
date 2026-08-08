@@ -5,7 +5,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 
 // Crest Academy Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBggD3DFaq2zoC1MW43-dLEPVpwOA4XDM",
+  apiKey: "AIzaSyBggD3DFaqg2zoC1MW43-dLEPVpwOA4XDM",
   authDomain: "crest-learning.firebaseapp.com",
   projectId: "crest-learning",
   storageBucket: "crest-learning.firebasestorage.app",
