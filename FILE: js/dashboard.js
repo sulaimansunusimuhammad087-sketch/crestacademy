@@ -50,7 +50,6 @@ onAuthStateChanged(auth, async (user) => {
   } 
   
   // Create a 5-second anti-hang timeout for Firestore.
-  // This guarantees Chrome will NEVER get stuck on the spinner!
   const fetchWithTimeout = (promise, ms) => {
     return Promise.race([
       promise,
@@ -83,17 +82,14 @@ onAuthStateChanged(auth, async (user) => {
     }
   } catch(error) {
     console.error("Firestore loading error or timeout:", error);
-    // Even if it completely fails, we show the dashboard! No more infinite spinners.
+    // Even if it completely fails, we populate the dashboard with fallback info
     const fallbackName = user.displayName || getNameFromEmail(user.email);
     setText(welcomeNameEl, fallbackName);
     setText(profileNameEl, fallbackName);
     setText(profileEmailEl, user.email);
     setText(profileRoleEl, 'Student');
   } finally {
-    // Clear the hardcoded HTML failsafe timeout if it exists
-    if (window.cacheBusterTimeout) clearTimeout(window.cacheBusterTimeout);
-
-    // Always hide the loading spinner, no matter what happens
+    // Always hide the loading spinner gracefully
     if (loadingOverlay) {
       loadingOverlay.classList.add('hidden');
       setTimeout(() => {
@@ -110,6 +106,7 @@ if (logoutBtn) {
       logoutBtn.textContent = 'Logging out...';
       logoutBtn.disabled = true;
       await signOut(auth);
+      // Once signed out, onAuthStateChanged catches it and redirects to index.html
     } catch(error) {
       console.error("Logout error:", error);
       alert("Failed to log out. Please try again.");
