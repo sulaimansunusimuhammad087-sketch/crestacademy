@@ -33,6 +33,14 @@ function setText(el, text) {
   if (el) el.textContent = text;
 }
 
+// Helper: Extract name from email if all else fails
+function getNameFromEmail(email) {
+  if (!email) return 'Student';
+  const part = email.split('@')[0];
+  // Capitalize first letter
+  return part.charAt(0).toUpperCase() + part.slice(1);
+}
+
 // 1. Core Authentication & Profile Loading
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -41,45 +49,51 @@ onAuthStateChanged(auth, async (user) => {
     return; 
   } 
   
+  // Create a 5-second anti-hang timeout for Firestore.
+  // This guarantees Chrome will NEVER get stuck on the spinner!
+  const fetchWithTimeout = (promise, ms) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), ms))
+    ]);
+  };
+  
   try {
     const docRef = doc(db, 'users', user.uid);
-    const docSnap = await getDoc(docRef);
+    // Fetch data, but abandon it if it takes longer than 5 seconds
+    const docSnap = await fetchWithTimeout(getDoc(docRef), 5000);
     
     if (docSnap.exists()) {
       const data = docSnap.data();
-      const userName = data.name || 'Student';
+      const userName = data.name || user.displayName || getNameFromEmail(user.email);
       const userRole = data.role ? data.role.charAt(0).toUpperCase() + data.role.slice(1) : 'Student';
       
-      // Inject real data into UI
       setText(welcomeNameEl, userName);
       setText(profileNameEl, userName);
       setText(profileEmailEl, data.email || user.email);
       setText(profileRoleEl, userRole);
       
     } else {
-      // Profile missing in Firestore (fallback state)
-      setText(welcomeNameEl, 'Student');
-      setText(profileNameEl, 'Profile Pending');
+      // Document missing (account created before database rules were fixed)
+      const fallbackName = user.displayName || getNameFromEmail(user.email);
+      setText(welcomeNameEl, fallbackName);
+      setText(profileNameEl, fallbackName);
       setText(profileEmailEl, user.email);
       setText(profileRoleEl, 'Student');
     }
   } catch(error) {
-    console.error("Error fetching user data:", error);
-    // Graceful error handling in UI
-    setText(welcomeNameEl, 'Student');
-    setText(profileNameEl, 'Error Loading');
+    console.error("Firestore loading error or timeout:", error);
+    // Even if it completely fails, we show the dashboard! No more infinite spinners.
+    const fallbackName = user.displayName || getNameFromEmail(user.email);
+    setText(welcomeNameEl, fallbackName);
+    setText(profileNameEl, fallbackName);
     setText(profileEmailEl, user.email);
-    setText(profileRoleEl, 'Error');
-    
-    // Check if it's a permissions issue and show a helpful alert
-    if (error.code === 'permission-denied') {
-      alert("Firestore error: Ensure your database rules are published.");
-    }
+    setText(profileRoleEl, 'Student');
   } finally {
-    // Clear the hardcoded HTML failsafe timeout since the script actually ran!
+    // Clear the hardcoded HTML failsafe timeout if it exists
     if (window.cacheBusterTimeout) clearTimeout(window.cacheBusterTimeout);
-    
-    // Reveal Dashboard: Hide loading spinner smoothly once data is mapped
+
+    // Always hide the loading spinner, no matter what happens
     if (loadingOverlay) {
       loadingOverlay.classList.add('hidden');
       setTimeout(() => {
@@ -96,7 +110,6 @@ if (logoutBtn) {
       logoutBtn.textContent = 'Logging out...';
       logoutBtn.disabled = true;
       await signOut(auth);
-      // Redirection is automatically handled by the onAuthStateChanged listener above
     } catch(error) {
       console.error("Logout error:", error);
       alert("Failed to log out. Please try again.");
