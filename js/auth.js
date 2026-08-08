@@ -18,20 +18,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Helper to convert Firebase errors to friendly UI messages
-function getFriendlyErrorMessage(code) {
-  switch(code) {
-    case 'auth/invalid-email': return 'Invalid email address format.';
-    case 'auth/user-not-found': return 'No account found with this email.';
-    case 'auth/wrong-password': return 'Incorrect password.';
-    case 'auth/email-already-in-use': return 'An account already exists with this email.';
-    case 'auth/weak-password': return 'Password should be at least 6 characters.';
-    case 'auth/invalid-credential': return 'Invalid email or password.';
-    case 'auth/too-many-requests': return 'Too many attempts. Please try again later.';
-    default: return 'An error occurred. Please check your details and try again.';
-  }
-}
-
 // Global Auth Handler tied to the modal form submissions
 window.handleAuthSubmit = async function(e, type) {
   e.preventDefault();
@@ -66,7 +52,6 @@ window.handleAuthSubmit = async function(e, type) {
       
       msgBox.style.color = '#10b981'; // Green success
       msgBox.textContent = 'Registration successful! Redirecting...';
-      // Redirection is handled securely by onAuthStateChanged listener above
       
     } else if (type === 'login') {
       const email = document.getElementById('login-email').value.trim();
@@ -76,7 +61,6 @@ window.handleAuthSubmit = async function(e, type) {
       
       msgBox.style.color = '#10b981';
       msgBox.textContent = 'Login successful! Redirecting...';
-      // Redirection is handled securely by onAuthStateChanged listener above
       
     } else if (type === 'forgot') {
       const email = document.getElementById('forgot-email').value.trim();
@@ -88,9 +72,28 @@ window.handleAuthSubmit = async function(e, type) {
       e.target.reset(); // clear the field
     }
   } catch (error) {
-    console.error("Auth Error:", error);
+    // TEMPORARY DIAGNOSTIC ERROR HANDLING
+    console.error("Auth Error Code:", error.code);
+    console.error("Auth Error Message:", error.message);
+    
     msgBox.style.color = '#ef4444'; // Red error
-    msgBox.textContent = getFriendlyErrorMessage(error.code);
+    msgBox.style.textAlign = 'left'; // Better readability for block text
+    
+    let explanation = "An unexpected error occurred during authentication.";
+    if (error.code === 'auth/invalid-credential') explanation = "The email/password combination could not be authenticated.";
+    if (error.code === 'auth/user-not-found') explanation = "No account exists with this email.";
+    if (error.code === 'auth/wrong-password') explanation = "The password provided is incorrect.";
+    if (error.code === 'auth/email-already-in-use') explanation = "An account already exists for this email.";
+    if (error.code === 'auth/network-request-failed') explanation = "Network error. Check your internet connection.";
+    if (error.code === 'auth/operation-not-allowed') explanation = "This sign-in method is disabled in the Firebase console.";
+    if (error.code === 'permission-denied') explanation = "Firestore security rules blocked this request.";
+    
+    // Display exact Firebase details in the UI for mobile debugging
+    msgBox.innerHTML = `
+      <strong>Firebase error:</strong> ${error.code || 'Unknown Code'}<br>
+      <strong>Message:</strong> ${error.message || 'No message provided'}<br>
+      <strong>Explanation:</strong> ${explanation}
+    `;
   } finally {
     submitBtn.disabled = false;
   }
