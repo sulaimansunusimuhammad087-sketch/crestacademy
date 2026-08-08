@@ -10,43 +10,164 @@
 </head>
 <body>
 
-<header>
-  <nav class="bar">
-    <div class="brand">
-      <span class="brand-mark">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-      </span>
-      <span class="brand-name font-display">Crest Academy</span>
-    </div>
-    
-    <div class="mobile-controls">
-      <button class="theme-toggle" id="themeToggleDesk" aria-label="Toggle theme">
-        <svg class="sun-icon" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
-        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-      </button>
-      <button id="logoutBtn" class="btn btn-ghost btn-small">Log out</button>
-    </div>
-  </nav>
-</header>
+<!-- Clean Loading State -->
+<div id="loading-overlay" class="loading-overlay">
+  <div class="spinner"></div>
+  <p class="font-mono" style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">AUTHENTICATING...</p>
+</div>
 
-<main class="dashboard-main">
-  <div class="wrap">
-    <p class="eyebrow-label font-mono">DASHBOARD</p>
-    <h2 class="font-display">Welcome, <span id="dash-name" class="gradient-text">Loading...</span></h2>
-    
-    <div class="card profile-card">
-      <span class="icon-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      </span>
-      <h3 class="font-display">Your Profile Overview</h3>
-      <div style="margin-top: 24px;">
-        <p class="profile-item"><strong>Email:</strong> <span id="dash-email">...</span></p>
-        <p class="profile-item"><strong>Role:</strong> <span id="dash-role">...</span></p>
+<div class="dash-layout">
+  
+  <!-- Sidebar Navigation -->
+  <aside class="dash-sidebar" id="dashSidebar">
+    <div class="dash-sidebar-header">
+      <div class="brand">
+        <span class="brand-mark">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        </span>
+        <span class="brand-name font-display" style="font-size: 16px;">Crest Academy</span>
+      </div>
+      <button class="menu-btn dash-close-btn" id="dashCloseBtn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <nav class="dash-nav">
+      <a href="#" class="active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        Dashboard
+      </a>
+      <a href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        My Courses
+      </a>
+      <a href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        Progress
+      </a>
+      <a href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+        Certificates
+      </a>
+      <a href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="dash-sidebar-footer">
+      <div style="display:flex; gap:8px; width: 100%;">
+        <button class="theme-toggle" id="themeToggleDesk" aria-label="Toggle theme" style="border: 1px solid var(--border);">
+          <svg class="sun-icon" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
+          <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <button id="logoutBtn" class="btn btn-ghost btn-small" style="flex:1;">Log out</button>
       </div>
     </div>
-  </div>
-</main>
+  </aside>
 
+  <!-- Main Content Area -->
+  <main class="dash-main">
+    <!-- Mobile Header -->
+    <header class="dash-mobile-header">
+      <div class="brand">
+        <span class="brand-mark" style="width:28px; height:28px;">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        </span>
+      </div>
+      <button class="menu-btn" id="dashOpenBtn" aria-label="Open menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </header>
+
+    <div class="dash-content-wrap">
+      
+      <!-- Welcome Section -->
+      <div class="dash-welcome">
+        <p class="eyebrow-label font-mono">STUDENT DASHBOARD</p>
+        <h1 class="font-display">Welcome back, <span id="welcome-name" class="gradient-text">Student</span>.</h1>
+        <p class="desc">Your learning journey overview and recent activity.</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="dash-stats-grid">
+        <div class="card stat-card">
+          <p class="stat-title font-mono">ENROLLED COURSES</p>
+          <h3 class="stat-value font-display">0</h3>
+        </div>
+        <div class="card stat-card">
+          <p class="stat-title font-mono">COMPLETED COURSES</p>
+          <h3 class="stat-value font-display">0</h3>
+        </div>
+        <div class="card stat-card">
+          <p class="stat-title font-mono">CURRENT PROGRESS</p>
+          <h3 class="stat-value font-display">0%</h3>
+        </div>
+        <div class="card stat-card">
+          <p class="stat-title font-mono">CERTIFICATES</p>
+          <h3 class="stat-value font-display">0</h3>
+        </div>
+      </div>
+
+      <!-- Main Dashboard Grid -->
+      <div class="dash-bento-grid">
+        
+        <!-- My Learning (Empty State) -->
+        <div class="card dash-panel span-2">
+          <div class="panel-header">
+            <h3 class="font-display">My Learning</h3>
+          </div>
+          <div class="empty-state">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <h4>No courses yet</h4>
+            <p>Your enrolled courses will appear here.</p>
+            <button class="btn btn-primary btn-small" style="margin-top: 16px; opacity: 0.8; cursor: not-allowed;" title="Course enrollment connecting in later stages">Explore Courses</button>
+          </div>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="card dash-panel">
+          <div class="panel-header">
+            <h3 class="font-display">Profile Overview</h3>
+          </div>
+          <div class="profile-details">
+            <div class="profile-row">
+              <span class="label">Name</span>
+              <span class="value" id="profile-name">...</span>
+            </div>
+            <div class="profile-row">
+              <span class="label">Email</span>
+              <span class="value" id="profile-email">...</span>
+            </div>
+            <div class="profile-row">
+              <span class="label">Role</span>
+              <span class="value badge" id="profile-role">...</span>
+            </div>
+            <div class="profile-row">
+              <span class="label">Status</span>
+              <span class="value" style="color: #10b981; font-weight: 500;">Active</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity (Empty State) -->
+        <div class="card dash-panel span-3">
+          <div class="panel-header">
+            <h3 class="font-display">Recent Activity</h3>
+          </div>
+          <div class="empty-state">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <h4>No recent activity</h4>
+            <p>Your learning activity will appear here as you begin learning.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Reused modular scripts -->
 <script src="js/main.js"></script>
 <script type="module" src="js/dashboard.js"></script>
 
