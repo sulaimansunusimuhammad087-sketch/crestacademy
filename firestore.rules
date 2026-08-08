@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Secure Users Collection
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Users can securely create their profile ONLY with the 'student' role
+      allow create: if request.auth != null 
+                    && request.auth.uid == userId
+                    && request.resource.data.role == 'student';
+                    
+      // Users can update their profile, but they cannot change their existing role
+      allow update: if request.auth != null 
+                    && request.auth.uid == userId
+                    && request.resource.data.role == resource.data.role;
+    }
+  }
+}
