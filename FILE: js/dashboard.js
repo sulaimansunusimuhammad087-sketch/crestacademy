@@ -4,9 +4,8 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 
 // DOM Elements
 const loadingOverlay = document.getElementById('loading-overlay');
-const logoutBtn = document.getElementById('logoutBtn');
 
-// UI Elements to populate
+// UI Elements to populate (Profile elements are now in the sidebar)
 const welcomeNameEl = document.getElementById('welcome-name');
 const profileNameEl = document.getElementById('profile-name');
 const profileEmailEl = document.getElementById('profile-email');
@@ -28,6 +27,14 @@ if (closeBtn && sidebar) {
   });
 }
 
+// ------------------------------------------------------------------
+// NEW: Global handler for links that are waiting for Stage 4
+// ------------------------------------------------------------------
+window.showComingSoon = function(e) {
+  if (e) e.preventDefault();
+  alert("This feature will be connected in Stage 4! For now, focus on the Dashboard.");
+};
+
 // Helper: Safely update text content
 function setText(el, text) {
   if (el) el.textContent = text;
@@ -37,7 +44,6 @@ function setText(el, text) {
 function getNameFromEmail(email) {
   if (!email) return 'Student';
   const part = email.split('@')[0];
-  // Capitalize first letter
   return part.charAt(0).toUpperCase() + part.slice(1);
 }
 
@@ -59,7 +65,6 @@ onAuthStateChanged(auth, async (user) => {
   
   try {
     const docRef = doc(db, 'users', user.uid);
-    // Fetch data, but abandon it if it takes longer than 5 seconds
     const docSnap = await fetchWithTimeout(getDoc(docRef), 5000);
     
     if (docSnap.exists()) {
@@ -73,7 +78,6 @@ onAuthStateChanged(auth, async (user) => {
       setText(profileRoleEl, userRole);
       
     } else {
-      // Document missing (account created before database rules were fixed)
       const fallbackName = user.displayName || getNameFromEmail(user.email);
       setText(welcomeNameEl, fallbackName);
       setText(profileNameEl, fallbackName);
@@ -82,14 +86,12 @@ onAuthStateChanged(auth, async (user) => {
     }
   } catch(error) {
     console.error("Firestore loading error or timeout:", error);
-    // Even if it completely fails, we populate the dashboard with fallback info
     const fallbackName = user.displayName || getNameFromEmail(user.email);
     setText(welcomeNameEl, fallbackName);
     setText(profileNameEl, fallbackName);
     setText(profileEmailEl, user.email);
     setText(profileRoleEl, 'Student');
   } finally {
-    // Always hide the loading spinner gracefully
     if (loadingOverlay) {
       loadingOverlay.classList.add('hidden');
       setTimeout(() => {
@@ -99,19 +101,22 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// 2. Handle Logout
-if (logoutBtn) {
-  logoutBtn.addEventListener('click', async () => {
+// 2. Handle Logout for ALL logout buttons securely
+const logoutBtns = document.querySelectorAll('.logout-btn');
+logoutBtns.forEach(btn => {
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault(); // Prevent page jumping
     try {
-      logoutBtn.textContent = 'Logging out...';
-      logoutBtn.disabled = true;
+      btn.textContent = '...'; 
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
       await signOut(auth);
-      // Once signed out, onAuthStateChanged catches it and redirects to index.html
     } catch(error) {
       console.error("Logout error:", error);
       alert("Failed to log out. Please try again.");
-      logoutBtn.textContent = 'Log out';
-      logoutBtn.disabled = false;
+      btn.textContent = 'Log out';
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
     }
   });
-}
+});
