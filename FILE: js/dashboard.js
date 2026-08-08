@@ -2,34 +2,6 @@ import { auth, db } from './firebase.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ----------------------------------------------------
-// MOBILE DIAGNOSTIC TOOL: Print errors to the screen
-// ----------------------------------------------------
-window.addEventListener('error', (event) => {
-  const overlay = document.getElementById('loading-overlay');
-  if (overlay) {
-    overlay.innerHTML = `
-      <div style="color: #ef4444; padding: 20px; text-align: center; max-width: 90%; margin: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;">
-        <h3 style="margin-bottom: 10px; font-family: 'Space Grotesk', sans-serif;">Script Error</h3>
-        <p style="font-size: 14px; word-break: break-word; font-family: monospace;">${event.message}</p>
-      </div>
-    `;
-  }
-});
-
-window.addEventListener('unhandledrejection', (event) => {
-  const overlay = document.getElementById('loading-overlay');
-  if (overlay) {
-    overlay.innerHTML = `
-      <div style="color: #ef4444; padding: 20px; text-align: center; max-width: 90%; margin: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;">
-        <h3 style="margin-bottom: 10px; font-family: 'Space Grotesk', sans-serif;">Database/Network Error</h3>
-        <p style="font-size: 14px; word-break: break-word; font-family: monospace;">${event.reason}</p>
-      </div>
-    `;
-  }
-});
-// ----------------------------------------------------
-
 // DOM Elements
 const loadingOverlay = document.getElementById('loading-overlay');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -61,19 +33,6 @@ function setText(el, text) {
   if (el) el.textContent = text;
 }
 
-// FAILSAFE: If Firebase takes longer than 10 seconds, force the overlay to reveal a timeout message
-const timeoutFailsafe = setTimeout(() => {
-  if (loadingOverlay && !loadingOverlay.classList.contains('hidden')) {
-    loadingOverlay.innerHTML = `
-      <div style="color: #f59e0b; padding: 20px; text-align: center;">
-        <h3 style="font-family: 'Space Grotesk', sans-serif;">Connection Timeout</h3>
-        <p style="font-size: 14px; color: var(--text-muted);">Firebase is taking too long to respond. Check your internet connection or GitHub file paths.</p>
-        <button onclick="window.location.reload()" class="btn btn-primary btn-small" style="margin-top: 16px;">Reload Page</button>
-      </div>
-    `;
-  }
-}, 10000);
-
 // 1. Core Authentication & Profile Loading
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -91,13 +50,14 @@ onAuthStateChanged(auth, async (user) => {
       const userName = data.name || 'Student';
       const userRole = data.role ? data.role.charAt(0).toUpperCase() + data.role.slice(1) : 'Student';
       
+      // Inject real data into UI
       setText(welcomeNameEl, userName);
       setText(profileNameEl, userName);
       setText(profileEmailEl, data.email || user.email);
       setText(profileRoleEl, userRole);
       
     } else {
-      console.warn("User profile not found in Firestore.");
+      // Profile missing in Firestore (fallback state)
       setText(welcomeNameEl, 'Student');
       setText(profileNameEl, 'Profile Pending');
       setText(profileEmailEl, user.email);
@@ -105,13 +65,21 @@ onAuthStateChanged(auth, async (user) => {
     }
   } catch(error) {
     console.error("Error fetching user data:", error);
+    // Graceful error handling in UI
     setText(welcomeNameEl, 'Student');
     setText(profileNameEl, 'Error Loading');
     setText(profileEmailEl, user.email);
     setText(profileRoleEl, 'Error');
-    throw error; // Throw so the diagnostic tool catches it on screen!
+    
+    // Check if it's a permissions issue and show a helpful alert
+    if (error.code === 'permission-denied') {
+      alert("Firestore error: Ensure your database rules are published.");
+    }
   } finally {
-    clearTimeout(timeoutFailsafe); // Clear the timeout if we succeed
+    // Clear the hardcoded HTML failsafe timeout since the script actually ran!
+    if (window.cacheBusterTimeout) clearTimeout(window.cacheBusterTimeout);
+    
+    // Reveal Dashboard: Hide loading spinner smoothly once data is mapped
     if (loadingOverlay) {
       loadingOverlay.classList.add('hidden');
       setTimeout(() => {
@@ -128,6 +96,7 @@ if (logoutBtn) {
       logoutBtn.textContent = 'Logging out...';
       logoutBtn.disabled = true;
       await signOut(auth);
+      // Redirection is automatically handled by the onAuthStateChanged listener above
     } catch(error) {
       console.error("Logout error:", error);
       alert("Failed to log out. Please try again.");
